@@ -76,7 +76,7 @@
 
 	<modules>
 		<module>cache-aop</module>
-		<module>cache-aop-demo</module>
+		<module>cache-aop-demo</module> 
 	</modules>
 
 	<build>
