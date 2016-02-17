@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.aop.util</groupId>
+        <artifactId>aop-util</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>1.0.0</modelVersion>
+
+    <groupId>com.aop.util.cache</groupId>
+	<artifactId>cache-aop-demo</artifactId>
+	<name>cache-aop-demo</name>
+	<version>1.0.0</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.aop.util.cache</groupId>
+            <artifactId>cache-aop</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
+</project>
