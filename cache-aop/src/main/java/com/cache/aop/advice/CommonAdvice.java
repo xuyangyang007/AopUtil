@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class CommonAdvice<T> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CommonAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommonAdvice.class);
     
     protected Logger getLogger() {
-        return LOG;
+        return logger;
     }
     
     public Method getMethod(final JoinPoint jp) throws Exception {
