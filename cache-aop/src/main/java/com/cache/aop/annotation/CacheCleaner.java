@@ -21,6 +21,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface CacheCleaner {
     
+    /**
+     * @return
+     */
     public String cacheKeyPrefix() default "";
     
     public String cacheKeySuffix() default "";
