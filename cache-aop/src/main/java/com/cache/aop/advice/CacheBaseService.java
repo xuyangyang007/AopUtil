@@ -1,5 +1,10 @@
 package com.cache.aop.advice;
 
+/**
+ * 缓存的基础服务
+ * @author yangyang.xu
+ *
+ */
 public interface CacheBaseService {
 
     public String get(String key);

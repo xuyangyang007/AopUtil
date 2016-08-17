@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import com.cache.aop.annotation.CacheCleaner;
 import com.cache.aop.vo.CacheAnnotationData;
 
+/**
+ * 缓存清除注解的处理
+ * @author yangyang.xu
+ *
+ */
 @Component
 @Aspect
 public class CacheClearAdvice extends SingleCacheAdvice<CacheCleaner> {

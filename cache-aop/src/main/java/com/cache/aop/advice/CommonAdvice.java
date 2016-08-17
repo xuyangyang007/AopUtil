@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * 
+ * 公共的注解处理服务
  * @since 1.7
  * @author yangyang.xu
  *

@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import com.cache.aop.annotation.CacheLoader;
 import com.cache.aop.vo.CacheAnnotationData;
 
+/**
+ * 缓存加载器注解的处理
+ * @author yangyang.xu
+ *
+ */
 @Component
 @Aspect
 public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {

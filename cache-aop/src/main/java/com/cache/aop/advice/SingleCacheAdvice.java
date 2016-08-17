@@ -7,6 +7,12 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 import com.cache.aop.vo.CacheAnnotationData;
 
+/**
+ * 单个key的处理
+ * @author yangyang.xu
+ *
+ * @param <T>
+ */
 public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdvice<CacheAnnotationData> {
     
     private final Class<T> annotationClass;

@@ -11,6 +11,11 @@ import com.cache.aop.annotation.CacheParam;
 import com.cache.aop.vo.CacheAnnotationData;
 
 
+/**
+ * 缓存注解构建器
+ * @author yangyang.xu
+ *
+ */
 public class CacheAnnotationDataBuilder {
     
     public static CacheAnnotationData buildAnnotationData(final Annotation annotation,
