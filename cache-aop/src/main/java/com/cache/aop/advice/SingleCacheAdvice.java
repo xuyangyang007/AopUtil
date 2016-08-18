@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.springframework.util.DigestUtils;
 
 import com.cache.aop.vo.CacheAnnotationData;
 
@@ -45,14 +46,12 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
         key += data.getCacheNameSpace() + 
                 ":" + data.getCacheKeyPrefix() +
                 ":" + data.getCacheKeySuffix();
-        // TODO
         for (Integer index : data.getCacheParamIndexList()) {
-         // TODO   String json = FastJsonUtil.bean2Json(args[index]);
-            String json = "";
+            String json = args[index].toString();
             key += ":" +json;
         }
         if (key.length() > 100) {
-           // key = MD5Util.MD5(key); 
+           key = DigestUtils.md5DigestAsHex(key.getBytes("utf-8")); 
         }
         return key;
     }

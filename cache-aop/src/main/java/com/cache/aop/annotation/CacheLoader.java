@@ -28,7 +28,7 @@ public @interface CacheLoader {
     
     public boolean allowNullValue() default false;
     
-    public String cacheNode() default "redis";
+    public String cacheNode() default "mc";
     
     public boolean isReload() default false;
     

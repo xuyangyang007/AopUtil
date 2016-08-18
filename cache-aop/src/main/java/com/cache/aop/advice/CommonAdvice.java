@@ -37,7 +37,7 @@ public abstract class CommonAdvice<T> {
         return method;
     }
     
-    public Class getTargetClass(final JoinPoint jp) throws Exception {
+    public Class<? extends Object> getTargetClass(final JoinPoint jp) throws Exception {
         if (jp == null) {
             throw new Exception("JoinPoint is null");
         }
