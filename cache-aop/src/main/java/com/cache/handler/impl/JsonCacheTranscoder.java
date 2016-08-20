@@ -1,5 +1,6 @@
 package com.cache.handler.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cache.handler.CacheTranscoder;
 
 /**
@@ -11,8 +12,11 @@ import com.cache.handler.CacheTranscoder;
 public class JsonCacheTranscoder implements CacheTranscoder {
 
     @Override
-    public <T> T decode(byte[] obj, Class<?> clasz) {
-        return null;
+    public <T> T decode(byte[] obj, Class<T> clasz) {
+        if (obj == null || obj.length <= 0) {
+            return null;
+        }
+        return JSON.parseObject(new String(obj), clasz);
     }
 
     @Override

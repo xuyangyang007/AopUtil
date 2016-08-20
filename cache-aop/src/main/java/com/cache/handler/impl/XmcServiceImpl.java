@@ -3,20 +3,25 @@ package com.cache.handler.impl;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
+import net.rubyeye.xmemcached.exception.MemcachedException;
 import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cache.exception.CacheException;
 import com.cache.handler.CacheBasicService;
+import com.cache.handler.CacheTranscoder;
 
 /**
  * xmemcache缓存实现
@@ -36,6 +41,9 @@ public class XmcServiceImpl implements CacheBasicService {
     
     private Integer connectTimeOut = 500;
     
+    @Autowired
+    private CacheTranscoder cacheTranscoder;
+    
     @PostConstruct
     public void initMcClient() throws IOException {
         MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses(hosts));
@@ -47,23 +55,55 @@ public class XmcServiceImpl implements CacheBasicService {
     }
 
     @Override
-    public byte[] get(String key, long timeout) {
-        return null;
+    public byte[] get(String key, long timeout) throws CacheException {
+        try {
+            return client.get(key);
+        } catch (TimeoutException e) {
+            throw new CacheException("mc timeout" + e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new CacheException("mc interrupt" + e.getMessage(), e);
+        } catch (MemcachedException e) {
+            throw new CacheException("mc common error" + e.getMessage(), e);
+        }
     }
 
     @Override
-    public Map<String, byte[]> batchGet(List<String> keySet, Long timeOut) {
-        return null;
+    public Map<String, byte[]> batchGet(List<String> keySet, Long timeOut) throws CacheException {
+        try {
+            return client.get(keySet, timeOut);
+        } catch (TimeoutException e) {
+            throw new CacheException("mc timeout" + e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new CacheException("mc interrupt" + e.getMessage(), e);
+        } catch (MemcachedException e) {
+            throw new CacheException("mc common error" + e.getMessage(), e);
+        }
     }
 
     @Override
-    public boolean set(String key, byte[] value, int expireTime, long timeout) {
-        return false;
+    public boolean set(String key, byte[] value, int expireTime, long timeout) throws CacheException {
+        try {
+            return client.set(key, expireTime, value, timeout);
+        } catch (TimeoutException e) {
+            throw new CacheException("mc timeout" + e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new CacheException("mc interrupt" + e.getMessage(), e);
+        } catch (MemcachedException e) {
+            throw new CacheException("mc common error" + e.getMessage(), e);
+        }
     }
 
     @Override
-    public boolean delete(String key, long timeout) {
-        return false;
+    public boolean delete(String key, long timeout) throws CacheException {
+        try {
+            return client.delete(key, timeout);
+        } catch (TimeoutException e) {
+            throw new CacheException("mc timeout" + e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new CacheException("mc interrupt" + e.getMessage(), e);
+        } catch (MemcachedException e) {
+            throw new CacheException("mc common error" + e.getMessage(), e);
+        }
     }
 
     public String getHosts() {

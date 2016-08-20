@@ -7,7 +7,7 @@ package com.cache.handler;
  */
 public interface CacheTranscoder {
     
-    <T> T decode(byte[] obj, Class<?> clasz);
+    <T> T decode(byte[] obj, Class<T> clasz);
     
     <T> byte[] encode(T obj);
 
