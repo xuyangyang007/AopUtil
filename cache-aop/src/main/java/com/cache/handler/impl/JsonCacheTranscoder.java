@@ -21,7 +21,10 @@ public class JsonCacheTranscoder implements CacheTranscoder {
 
     @Override
     public <T> byte[] encode(T obj) {
-        return null;
+        if (obj == null) {
+            return null;
+        }
+        return JSON.toJSONString(obj).getBytes();
     }
 
 }
