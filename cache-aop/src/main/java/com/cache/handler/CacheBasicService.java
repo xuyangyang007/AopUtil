@@ -14,11 +14,11 @@ import com.cache.exception.CacheException;
 
 public interface CacheBasicService {
     
-    public byte[] get(String key, long timeout) throws CacheException;
+    public <T> T get(String key, long timeout, Class<T> clazz) throws CacheException;
     
-    public Map<String, byte[]> batchGet(List<String> keySet, Long timeOut) throws CacheException;
+    public <T> Map<String, T> batchGet(List<String> keySet, Long timeOut, Class<T> clazz) throws CacheException;
     
-    public boolean set(String key, byte[] value, int expireTime, long timeout) throws CacheException;
+    public <T> boolean set(String key, T value, int expireTime, long timeout) throws CacheException;
     
     public boolean delete(String key, long timeout) throws CacheException;
 
