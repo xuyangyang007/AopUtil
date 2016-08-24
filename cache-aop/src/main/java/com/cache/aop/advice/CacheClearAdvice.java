@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.cache.aop.annotation.CacheCleaner;
 import com.cache.aop.vo.CacheAnnotationData;
+import com.cache.handler.CacheBasicService;
 
 /**
  * 缓存清除注解的处理
@@ -29,9 +30,9 @@ public class CacheClearAdvice extends SingleCacheAdvice<CacheCleaner> {
     @Around("cleanCache()")
     public Object cleanCache(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
-        CacheBaseService service = getCacheBaseService(cacheAnnotationData);
+        CacheBasicService service = getCacheBaseService(cacheAnnotationData);
         String key = getCacheKey(cacheAnnotationData, pjp.getArgs());
-        service.delete(key);
+        service.delete(key, service.getOptTimeOut());
         Object result = pjp.proceed();
         return result;
     }

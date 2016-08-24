@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.cache.aop.annotation.CacheLoader;
 import com.cache.aop.vo.CacheAnnotationData;
+import com.cache.handler.CacheBasicService;
 
 /**
  * 缓存加载器注解的处理
@@ -29,11 +30,11 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
     @Around("loadCache()")
     public Object cacheGetSingle(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
-        CacheBaseService service = getCacheBaseService(cacheAnnotationData);
+        CacheBasicService service = getCacheBaseService(cacheAnnotationData);
         String key = getCacheKey(cacheAnnotationData, pjp.getArgs());
         Object result = null;
         if (!cacheAnnotationData.isReload()) {
-            result = service.get(key, cacheAnnotationData.getReturnType());
+            result = service.get(key, service.getOptTimeOut(), cacheAnnotationData.getReturnType());
             if (result != null) {
                 return result;
             }
@@ -42,7 +43,7 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
             result = new Object();
         }
-        service.set(key, result, cacheAnnotationData.getTimeout());
+        service.set(key, result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
         return result;
     }
     

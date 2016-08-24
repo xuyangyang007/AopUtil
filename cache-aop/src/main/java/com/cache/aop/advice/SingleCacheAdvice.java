@@ -4,9 +4,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 import com.cache.aop.vo.CacheAnnotationData;
+import com.cache.handler.CacheBasicService;
 
 /**
  * 单个key的处理
@@ -14,9 +17,13 @@ import com.cache.aop.vo.CacheAnnotationData;
  *
  * @param <T>
  */
+@Component
 public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdvice<CacheAnnotationData> {
     
     private final Class<T> annotationClass;
+    
+    @Autowired
+    private CacheBasicService xmcServiceImpl;
 
     public SingleCacheAdvice(final Class<T> annotationClass) {
         this.annotationClass = annotationClass;
@@ -57,12 +64,10 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
     }
     
     
-    public CacheBaseService getCacheBaseService(CacheAnnotationData data) {
-        if (data.getCacheKeyPrefix().equals("mc")) {
-            //McFactoryService service = (McFactoryService) SpringUtil.getBean("mcFactoryService");
-            //return service;
+    public CacheBasicService getCacheBaseService(CacheAnnotationData data) {
+        if (data.getCacheNode().equals("mc")) {
+            return xmcServiceImpl;
         }
-        //RedisFactoryService service = (RedisFactoryService) SpringUtil.getBean("redisFactoryService");
         return null;
     }
 

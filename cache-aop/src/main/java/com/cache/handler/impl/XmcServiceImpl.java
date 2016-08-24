@@ -41,6 +41,10 @@ public class XmcServiceImpl implements CacheBasicService {
     
     private Integer connectTimeOut = 500;
     
+    private Integer optTimeOut = 3000;
+    
+    private Integer batchOptTimeOut = 5000;
+    
     @Autowired
     private CacheTranscoder cacheTranscoder;
     
@@ -147,6 +151,22 @@ public class XmcServiceImpl implements CacheBasicService {
 
     public void setConnectTimeOut(Integer connectTimeOut) {
         this.connectTimeOut = connectTimeOut;
+    }
+
+    public Integer getOptTimeOut() {
+        return optTimeOut;
+    }
+
+    public void setOptTimeOut(Integer optTimeOut) {
+        this.optTimeOut = optTimeOut;
+    }
+
+    public Integer getBatchOptTimeOut() {
+        return batchOptTimeOut;
+    }
+
+    public void setBatchOptTimeOut(Integer batchOptTimeOut) {
+        this.batchOptTimeOut = batchOptTimeOut;
     }
 
 }

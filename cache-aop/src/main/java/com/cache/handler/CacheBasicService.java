@@ -21,5 +21,9 @@ public interface CacheBasicService {
     public <T> boolean set(String key, T value, int expireTime, long timeout) throws CacheException;
     
     public boolean delete(String key, long timeout) throws CacheException;
+    
+    public Integer getOptTimeOut();
+
+    public Integer getBatchOptTimeOut();
 
 }
