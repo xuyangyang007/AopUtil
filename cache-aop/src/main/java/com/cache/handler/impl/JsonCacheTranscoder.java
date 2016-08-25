@@ -1,5 +1,7 @@
 package com.cache.handler.impl;
 
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSON;
 import com.cache.handler.CacheTranscoder;
 
@@ -9,6 +11,7 @@ import com.cache.handler.CacheTranscoder;
  * @author yangyang.xu
  *
  */
+@Component
 public class JsonCacheTranscoder implements CacheTranscoder {
 
     @Override

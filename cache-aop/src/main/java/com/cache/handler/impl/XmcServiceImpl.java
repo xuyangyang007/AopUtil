@@ -35,7 +35,7 @@ public class XmcServiceImpl implements CacheBasicService {
     
     private MemcachedClient client;
     
-    private String hosts = "";
+    private String hosts = "ip:port";
     
     private Integer poolSize = 1;
     
