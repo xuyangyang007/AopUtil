@@ -1,5 +1,6 @@
 package com.cache.handler;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,8 @@ import com.cache.exception.CacheException;
 public interface CacheBasicService {
     
     public <T> T get(String key, long timeout, Class<T> clazz) throws CacheException;
+    
+    public <T> T get(String key, long timeout, Type type) throws CacheException;
     
     public <T> Map<String, T> batchGet(List<String> keySet, Long timeOut, Class<T> clazz) throws CacheException;
     

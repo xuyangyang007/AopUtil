@@ -1,5 +1,6 @@
 package com.cache.aop.vo;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -28,6 +29,16 @@ public class CacheAnnotationData {
     
     private Class<?> returnType;
     
+    private Type genType;
+    
+    public Type getGenType() {
+        return genType;
+    }
+
+    public void setGenType(Type genType) {
+        this.genType = genType;
+    }
+
     public Class<?> getReturnType() {
         return returnType;
     }

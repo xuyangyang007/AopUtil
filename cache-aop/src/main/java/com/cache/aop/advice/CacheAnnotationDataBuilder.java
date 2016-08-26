@@ -26,6 +26,8 @@ public class CacheAnnotationDataBuilder {
             populateClassCacheName(data, tagetClass);
             populateCacheName(data, targetMethod);
             populateCacheArgs(data, targetMethod);
+            data.setReturnType(targetMethod.getReturnType());
+            data.setGenType(targetMethod.getGenericReturnType());
         } catch (Exception ex) {
             throw new RuntimeException("Problem assembling Annotation information.", ex);
         }

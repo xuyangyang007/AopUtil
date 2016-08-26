@@ -1,6 +1,7 @@
 package com.cache.handler.impl;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
@@ -35,7 +37,7 @@ public class XmcServiceImpl implements CacheBasicService {
     
     private MemcachedClient client;
     
-    private String hosts = "ip:port";
+    private String hosts = "";
     
     private Integer poolSize = 1;
     
@@ -128,6 +130,13 @@ public class XmcServiceImpl implements CacheBasicService {
             throw new CacheException("mc common error" + e.getMessage(), e);
         }
     }
+    
+    @PreDestroy
+    public void shutdown() throws IOException {
+        if (null != client) {
+            client.shutdown();
+        }
+    }
 
     public String getHosts() {
         return hosts;
@@ -167,6 +176,23 @@ public class XmcServiceImpl implements CacheBasicService {
 
     public void setBatchOptTimeOut(Integer batchOptTimeOut) {
         this.batchOptTimeOut = batchOptTimeOut;
+    }
+
+    @Override
+    public <T> T get(String key, long timeout, Type type) throws CacheException {
+        try {
+            byte[] result =  client.get(key);
+            if (result == null) {
+                return null;
+            }
+            return cacheTranscoder.decode(result, type);
+        } catch (TimeoutException e) {
+            throw new CacheException("mc timeout" + e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new CacheException("mc interrupt" + e.getMessage(), e);
+        } catch (MemcachedException e) {
+            throw new CacheException("mc common error" + e.getMessage(), e);
+        }
     }
 
 }

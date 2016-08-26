@@ -34,7 +34,7 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
         String key = getCacheKey(cacheAnnotationData, pjp.getArgs());
         Object result = null;
         if (!cacheAnnotationData.isReload()) {
-            result = service.get(key, service.getOptTimeOut(), cacheAnnotationData.getReturnType());
+            result = service.get(key, service.getOptTimeOut(), cacheAnnotationData.getGenType());
             if (result != null) {
                 return result;
             }

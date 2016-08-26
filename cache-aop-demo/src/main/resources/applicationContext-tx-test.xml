@@ -16,4 +16,12 @@
 	<context:annotation-config />
     <context:component-scan base-package="com.cache.**"/>
     
+    <bean id="xmcServiceImpl" class="com.cache.handler.impl.XmcServiceImpl"> 
+    	<property name="hosts" value="ip:port"></property>
+    	<property name="poolSize" value="1"></property>
+    	<property name="connectTimeOut" value="500"></property>
+    	<property name="optTimeOut" value="3000"></property>
+    	<property name="batchOptTimeOut" value="5000"></property>
+    </bean>
+    
 </beans>

@@ -1,5 +1,7 @@
 package com.cache.handler.impl;
 
+import java.lang.reflect.Type;
+
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +30,14 @@ public class JsonCacheTranscoder implements CacheTranscoder {
             return null;
         }
         return JSON.toJSONString(obj).getBytes();
+    }
+
+    @Override
+    public <T> T decode(byte[] obj, Type clasz) {
+        if (obj == null || obj.length <= 0) {
+            return null;
+        }
+        return JSON.parseObject(new String(obj), clasz);
     }
 
 }
