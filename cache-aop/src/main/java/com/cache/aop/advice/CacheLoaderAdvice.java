@@ -31,6 +31,7 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
     public Object cacheGetSingle(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
+        // TODO 增加多个key处理
         String key = getCacheKey(cacheAnnotationData, pjp.getArgs());
         Object result = null;
         if (!cacheAnnotationData.isReload()) {
