@@ -1,10 +1,13 @@
 package com.cache.aop.advice;
 
+import java.util.List;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.cache.aop.annotation.CacheCleaner;
 import com.cache.aop.vo.CacheAnnotationData;
@@ -31,8 +34,12 @@ public class CacheClearAdvice extends SingleCacheAdvice<CacheCleaner> {
     public Object cleanCache(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
-        String key = getCacheKey(cacheAnnotationData, pjp.getArgs());
-        service.delete(key, service.getOptTimeOut());
+        List<String> keyList = getCacheKey(cacheAnnotationData, pjp.getArgs());
+        if (keyList != null && keyList.size() > 0) {
+            for (String key : keyList) {
+                service.delete(key, service.getOptTimeOut());
+            }
+        }
         Object result = pjp.proceed();
         return result;
     }

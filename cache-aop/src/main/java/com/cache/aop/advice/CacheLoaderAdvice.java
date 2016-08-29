@@ -1,5 +1,7 @@
 package com.cache.aop.advice;
 
+import java.util.List;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -31,20 +33,22 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
     public Object cacheGetSingle(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
-        // TODO 增加多个key处理
-        String key = getCacheKey(cacheAnnotationData, pjp.getArgs());
+        List<String> keyList = getCacheKey(cacheAnnotationData, pjp.getArgs());
         Object result = null;
-        if (!cacheAnnotationData.isReload()) {
-            result = service.get(key, service.getOptTimeOut(), cacheAnnotationData.getGenType());
-            if (result != null) {
-                return result;
-            }
+        if (keyList != null && keyList.size() == 1) {
+            result = service.get(keyList.get(0), service.getOptTimeOut(), cacheAnnotationData.getGenType());
+        }
+        if (keyList != null && keyList.size() > 1) {
+            
+        }
+        if (result != null) {
+            return result;
         }
         result = pjp.proceed();
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
             result = new Object();
         }
-        service.set(key, result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+        service.set("xx", result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
         return result;
     }
     

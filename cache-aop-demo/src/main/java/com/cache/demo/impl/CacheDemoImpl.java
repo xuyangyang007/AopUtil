@@ -39,7 +39,7 @@ public class CacheDemoImpl implements CacheDemo {
 
     @Override
     @CacheLoader(cacheKeyPrefix="detailList", timeout=3000)
-    public List<CacheData> getCacheData(Integer id) {
+    public List<CacheData> getCacheData(@CacheParam Integer id) {
         CacheData data1 = new CacheData();
         data1.setDescription("11");
         data1.setId(1);

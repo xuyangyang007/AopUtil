@@ -2,6 +2,9 @@ package com.cache.aop.advice;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,19 +51,25 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
         return data;
     }
 
-    public String getCacheKey(final CacheAnnotationData data, final Object[] args) throws Exception {
-        String key = "";
-        key += data.getCacheNameSpace() + 
+    public List<String> getCacheKey(final CacheAnnotationData data, final Object[] args) throws Exception {
+        List<String> keyList = new ArrayList<String>();
+        String keyPrefix = data.getCacheNameSpace() + 
                 ":" + data.getCacheKeyPrefix() +
                 ":" + data.getCacheKeySuffix();
         for (Integer index : data.getCacheParamIndexList()) {
-            String json = args[index].toString();
-            key += ":" +json;
+            if (args[index] == null) {
+                continue;
+            }
+            if (args[index] instanceof Collection<?>) {
+                for (Object obj : (Collection<?>)args[index]) {
+                    keyList.add(keyPrefix + ":" + obj.toString());
+                }
+            } else {
+                keyList.add(keyPrefix + ":" + args[index].toString());
+            }
+            break;
         }
-        if (key.length() > 100) {
-           key = DigestUtils.md5DigestAsHex(key.getBytes("utf-8")); 
-        }
-        return key;
+        return keyList;
     }
     
     
