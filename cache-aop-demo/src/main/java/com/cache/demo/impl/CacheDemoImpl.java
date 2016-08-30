@@ -1,7 +1,9 @@
 package com.cache.demo.impl;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,20 @@ public class CacheDemoImpl implements CacheDemo {
         data2.setName("22");
         List<CacheData> list = Arrays.asList(data1, data2);
         return list;
+    }
+
+    @Override
+    @CacheLoader(cacheKeyPrefix="batchGetData", timeout=3000)
+    public Map<Integer, CacheData> batchGetData(@CacheParam List<Integer> idList) {
+        Map<Integer, CacheData> map = new HashMap<Integer, CacheData>();
+        for (Integer id : idList) {
+            CacheData data1 = new CacheData();
+            data1.setDescription(id + "desc");
+            data1.setId(id);
+            data1.setName("name" + id);
+            map.put(id, data1);
+        }
+        return null;
     }
 
 }

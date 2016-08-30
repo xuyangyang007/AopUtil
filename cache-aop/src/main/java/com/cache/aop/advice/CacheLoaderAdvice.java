@@ -39,7 +39,7 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
             result = service.get(keyList.get(0), service.getOptTimeOut(), cacheAnnotationData.getGenType());
         }
         if (keyList != null && keyList.size() > 1) {
-            
+                
         }
         if (result != null) {
             return result;

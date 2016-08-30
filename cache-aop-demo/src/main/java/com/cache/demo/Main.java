@@ -1,6 +1,8 @@
 package com.cache.demo;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -16,11 +18,8 @@ public class Main {
                 "src/main/resources/applicationContext-tx-test.xml");
         CacheDemoImpl demo = (CacheDemoImpl) factory.getBean("cacheDemoImpl");
         //   demo.getCacheById(1L);
-        List<CacheData> result = demo.getCacheData(2);
-        for (CacheData data : result) {
-            System.out.println(data.getName());
-            System.out.println(data.getId());
-        }
+        List<Integer> idList = Arrays.asList(1, 2, 3);
+        Map<Integer, CacheData> result = demo.batchGetData(idList);
         System.out.println(JSON.toJSONString(result));
     }
 

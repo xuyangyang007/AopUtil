@@ -2,6 +2,8 @@ package com.cache.aop.advice;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,11 @@ public class CacheAnnotationDataBuilder {
             populateCacheArgs(data, targetMethod);
             data.setReturnType(targetMethod.getReturnType());
             data.setGenType(targetMethod.getGenericReturnType());
+            if(targetMethod.getGenericReturnType() instanceof ParameterizedType){ 
+                ParameterizedType parameterizedType= (ParameterizedType) targetMethod.getGenericReturnType(); 
+                Type[] types = parameterizedType.getActualTypeArguments();
+                Type ss = types[1];
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Problem assembling Annotation information.", ex);
         }
