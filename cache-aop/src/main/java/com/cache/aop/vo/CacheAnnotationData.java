@@ -31,6 +31,16 @@ public class CacheAnnotationData {
     
     private Type genType;
     
+    private Type[] innerType;
+    
+    public Type[] getInnerType() {
+        return innerType;
+    }
+
+    public void setInnerType(Type[] innerType) {
+        this.innerType = innerType;
+    }
+
     public Type getGenType() {
         return genType;
     }

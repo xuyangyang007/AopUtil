@@ -9,7 +9,6 @@ import java.util.List;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 
 import com.cache.aop.vo.CacheAnnotationData;
 import com.cache.handler.CacheBasicService;

@@ -43,9 +43,9 @@ public class XmcServiceImpl implements CacheBasicService {
     
     private Integer connectTimeOut = 500;
     
-    private Integer optTimeOut = 3000;
+    private Long optTimeOut = 3000L;
     
-    private Integer batchOptTimeOut = 5000;
+    private Long batchOptTimeOut = 5000L;
     
     @Autowired
     private CacheTranscoder cacheTranscoder;
@@ -162,21 +162,6 @@ public class XmcServiceImpl implements CacheBasicService {
         this.connectTimeOut = connectTimeOut;
     }
 
-    public Integer getOptTimeOut() {
-        return optTimeOut;
-    }
-
-    public void setOptTimeOut(Integer optTimeOut) {
-        this.optTimeOut = optTimeOut;
-    }
-
-    public Integer getBatchOptTimeOut() {
-        return batchOptTimeOut;
-    }
-
-    public void setBatchOptTimeOut(Integer batchOptTimeOut) {
-        this.batchOptTimeOut = batchOptTimeOut;
-    }
 
     @Override
     public <T> T get(String key, long timeout, Type type) throws CacheException {
@@ -195,4 +180,37 @@ public class XmcServiceImpl implements CacheBasicService {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> Map<String, T> batchGet(List<String> keySet, Long timeOut, Type clazz) throws CacheException {
+        try {
+            Map<String, byte[]> cacheResult = client.get(keySet, timeOut);
+            if (cacheResult == null || cacheResult.size() <= 0) {
+                return null;
+            }
+            Map<String, T> result = new HashMap<String, T>();
+            for (Entry<String, byte[]> entry : cacheResult.entrySet()) {
+                if (entry.getKey() == null || entry.getValue() == null) {
+                    continue;
+                }
+                result.put(entry.getKey(), (T) cacheTranscoder.decode(entry.getValue(), clazz));
+            }
+            return result;
+        } catch (TimeoutException e) {
+            throw new CacheException("mc timeout" + e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new CacheException("mc interrupt" + e.getMessage(), e);
+        } catch (MemcachedException e) {
+            throw new CacheException("mc common error" + e.getMessage(), e);
+        }
+    }
+
+    public Long getOptTimeOut() {
+        return optTimeOut;
+    }
+
+    public Long getBatchOptTimeOut() {
+        return batchOptTimeOut;
+    }
+    
 }

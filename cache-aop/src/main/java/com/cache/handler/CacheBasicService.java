@@ -21,12 +21,14 @@ public interface CacheBasicService {
     
     public <T> Map<String, T> batchGet(List<String> keySet, Long timeOut, Class<T> clazz) throws CacheException;
     
+    public <T> Map<String, T> batchGet(List<String> keySet, Long timeOut, Type clazz) throws CacheException;
+    
     public <T> boolean set(String key, T value, int expireTime, long timeout) throws CacheException;
     
     public boolean delete(String key, long timeout) throws CacheException;
     
-    public Integer getOptTimeOut();
+    public Long getOptTimeOut();
 
-    public Integer getBatchOptTimeOut();
+    public Long getBatchOptTimeOut();
 
 }

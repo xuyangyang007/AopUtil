@@ -33,7 +33,7 @@ public class CacheAnnotationDataBuilder {
             if(targetMethod.getGenericReturnType() instanceof ParameterizedType){ 
                 ParameterizedType parameterizedType= (ParameterizedType) targetMethod.getGenericReturnType(); 
                 Type[] types = parameterizedType.getActualTypeArguments();
-                Type ss = types[1];
+                data.setInnerType(types);
             }
         } catch (Exception ex) {
             throw new RuntimeException("Problem assembling Annotation information.", ex);

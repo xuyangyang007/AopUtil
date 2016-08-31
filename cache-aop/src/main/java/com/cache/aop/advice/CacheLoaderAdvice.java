@@ -1,6 +1,8 @@
 package com.cache.aop.advice;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,11 +37,16 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
         List<String> keyList = getCacheKey(cacheAnnotationData, pjp.getArgs());
         Object result = null;
+        boolean isMulti = false;
         if (keyList != null && keyList.size() == 1) {
             result = service.get(keyList.get(0), service.getOptTimeOut(), cacheAnnotationData.getGenType());
         }
         if (keyList != null && keyList.size() > 1) {
-                
+            if (cacheAnnotationData.getReturnType() == Map.class) {
+                Type type = cacheAnnotationData.getInnerType()[1];
+                result = service.batchGet(keyList, service.getOptTimeOut(), type);
+                isMulti = true;
+            }
         }
         if (result != null) {
             return result;
@@ -48,7 +55,11 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
             result = new Object();
         }
-        service.set("xx", result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+        if (isMulti) {
+            
+        } else {
+            service.set(keyList.get(0), result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+        }
         return result;
     }
     
