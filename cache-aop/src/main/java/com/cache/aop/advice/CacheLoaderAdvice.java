@@ -1,6 +1,7 @@
 package com.cache.aop.advice;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,15 +49,31 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
                 isMulti = true;
             }
         }
-        if (result != null) {
+        if (!isMulti && result != null) {
             return result;
         }
-        result = pjp.proceed();
+        
+        if (isMulti) {
+            if (((Map)result).size() == keyList.size()) {
+                return result;
+            } else {
+                List<String> notExistList = new ArrayList<String>();
+                for (String key : keyList) {
+                    if (((Map)result).get(key) == null) {
+                        notExistList.add(key);
+                    }
+                }
+                pjp.getArgs()[cacheAnnotationData.getCacheParamIndexList().get(0)] = notExistList;
+            }
+        }
+        result = pjp.proceed(pjp.getArgs());
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
             result = new Object();
         }
         if (isMulti) {
-            
+            for (String key : keyList) {
+                
+            }
         } else {
             service.set(keyList.get(0), result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
         }

@@ -57,6 +57,21 @@ public class CacheAnnotationDataBuilder {
         }
         data.setCacheParamIndexList(list);
     }
+    
+    public static void setCacheArgs(Object param, Method targetMethod) {
+        Annotation[][] paramAnotations = targetMethod.getParameterAnnotations();
+        if (paramAnotations == null) {
+            return ;
+        }
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i = 0; i < paramAnotations.length; i++) {
+            for (Annotation annotation : paramAnotations[i]) {
+                if (annotation.annotationType().equals(CacheParam.class)) {
+                    list.add(i);
+                }
+            }
+        }
+    }
 
     private static void populateClassCacheName(CacheAnnotationData data, Class<?> tagetClass) {
         CacheNamespace cacheKeyConfig = (CacheNamespace) tagetClass.getAnnotation(CacheNamespace.class);
