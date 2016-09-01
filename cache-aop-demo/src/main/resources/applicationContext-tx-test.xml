@@ -17,7 +17,7 @@
     <context:component-scan base-package="com.cache.**"/>
     
     <bean id="xmcServiceImpl" class="com.cache.handler.impl.XmcServiceImpl"> 
-    	<property name="hosts" value="10.199.198.219:11211"></property>
+    	<property name="hosts" value="ip:port"></property>
     	<property name="poolSize" value="1"></property>
     	<property name="connectTimeOut" value="500"></property>
     	<property name="optTimeOut" value="3000"></property>
