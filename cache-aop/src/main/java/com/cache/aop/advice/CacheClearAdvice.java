@@ -1,6 +1,7 @@
 package com.cache.aop.advice;
 
 import java.util.List;
+import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -33,9 +34,9 @@ public class CacheClearAdvice extends SingleCacheAdvice<CacheCleaner> {
     public Object cleanCache(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
-        List<String> keyList = getCacheKey(cacheAnnotationData, pjp.getArgs());
+        Map<String, Object> keyList = getCacheKey(cacheAnnotationData, pjp.getArgs());
         if (keyList != null && keyList.size() > 0) {
-            for (String key : keyList) {
+            for (String key : keyList.keySet()) {
                 service.delete(key, service.getOptTimeOut());
             }
         }

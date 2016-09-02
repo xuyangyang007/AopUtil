@@ -4,7 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +52,8 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
         return data;
     }
 
-    public List<String> getCacheKey(final CacheAnnotationData data, final Object[] args) throws Exception {
-        List<String> keyList = new ArrayList<String>();
+    public Map<String, Object> getCacheKey(final CacheAnnotationData data, final Object[] args) throws Exception {
+        Map<String, Object> keyList = new HashMap<String, Object>();
         String keyPrefix = data.getCacheNameSpace() + 
                 ":" + data.getCacheKeyPrefix() +
                 ":" + data.getCacheKeySuffix();
@@ -61,10 +63,10 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
             }
             if (args[index] instanceof Collection<?>) {
                 for (Object obj : (Collection<?>)args[index]) {
-                    keyList.add(keyPrefix + ":" + obj.toString());
+                    keyList.put(keyPrefix + ":" + obj.toString(), obj);
                 }
             } else {
-                keyList.add(keyPrefix + ":" + args[index].toString());
+                keyList.put(keyPrefix + ":" + args[index].toString(), args[index]);
             }
             break;
         }

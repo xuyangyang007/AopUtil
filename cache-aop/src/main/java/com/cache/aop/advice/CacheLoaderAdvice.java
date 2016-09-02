@@ -36,9 +36,10 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
     public Object cacheGetSingle(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
-        List<String> keyList = getCacheKey(cacheAnnotationData, pjp.getArgs());
+        Map<String, Object> keyMap = getCacheKey(cacheAnnotationData, pjp.getArgs());
         Object result = null;
         boolean isMulti = false;
+        List<String> keyList = new ArrayList<>(keyMap.keySet());
         if (keyList != null && keyList.size() == 1) {
             result = service.get(keyList.get(0), service.getOptTimeOut(), cacheAnnotationData.getGenType());
         }
@@ -53,29 +54,29 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
             return result;
         }
         
+        List<Object> notExistList = new ArrayList<Object>();
+        List<String> notExistKey = new ArrayList<String>();
         if (isMulti) {
-            if (((Map)result).size() == keyList.size()) {
+            if (((Map<?, ?>)result).size() == keyList.size()) {
                 return result;
             } else {
-                List<String> notExistList = new ArrayList<String>();
                 for (String key : keyList) {
-                    if (((Map)result).get(key) == null) {
-                        notExistList.add(key);
+                    if (((Map<?, ?>)result).get(key) == null) {
+                        notExistList.add(keyMap.get(key));
+                        notExistKey.add(key);
                     }
                 }
                 pjp.getArgs()[cacheAnnotationData.getCacheParamIndexList().get(0)] = notExistList;
             }
+        } else {
+            notExistKey.add(keyList.get(0));
         }
         result = pjp.proceed(pjp.getArgs());
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
             result = new Object();
         }
-        if (isMulti) {
-            for (String key : keyList) {
-                
-            }
-        } else {
-            service.set(keyList.get(0), result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+        for (String key : notExistKey) {
+            service.set(key, result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
         }
         return result;
     }
