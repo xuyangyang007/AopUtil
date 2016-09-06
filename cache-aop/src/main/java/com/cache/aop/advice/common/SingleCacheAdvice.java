@@ -1,17 +1,15 @@
-package com.cache.aop.advice;
+package com.cache.aop.advice.common;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cache.aop.advice.CacheAnnotationDataBuilder;
 import com.cache.aop.vo.CacheAnnotationData;
 import com.cache.handler.CacheBasicService;
 
@@ -61,13 +59,7 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
             if (args[index] == null) {
                 continue;
             }
-            if (args[index] instanceof Collection<?>) {
-                for (Object obj : (Collection<?>)args[index]) {
-                    keyList.put(keyPrefix + ":" + obj.toString(), obj);
-                }
-            } else {
-                keyList.put(keyPrefix + ":" + args[index].toString(), args[index]);
-            }
+            keyList.put(keyPrefix + ":" + args[index].toString(), args[index]);
             break;
         }
         return keyList;

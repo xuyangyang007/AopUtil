@@ -2,8 +2,10 @@ package com.cache.aop.advice;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -11,6 +13,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import com.cache.aop.advice.common.SingleCacheAdvice;
 import com.cache.aop.annotation.CacheLoader;
 import com.cache.aop.vo.CacheAnnotationData;
 import com.cache.handler.CacheBasicService;
@@ -37,31 +40,39 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
         Map<String, Object> keyMap = getCacheKey(cacheAnnotationData, pjp.getArgs());
-        Object result = null;
+        Object cacheResult = null;
+        Map<Object, Object> mutilResult = null;
         boolean isMulti = false;
         List<String> keyList = new ArrayList<>(keyMap.keySet());
         if (keyList != null && keyList.size() == 1) {
-            result = service.get(keyList.get(0), service.getOptTimeOut(), cacheAnnotationData.getGenType());
+            cacheResult = service.get(keyList.get(0), service.getOptTimeOut(), cacheAnnotationData.getGenType());
         }
         if (keyList != null && keyList.size() > 1) {
             if (cacheAnnotationData.getReturnType() == Map.class) {
                 Type type = cacheAnnotationData.getInnerType()[1];
-                result = service.batchGet(keyList, service.getOptTimeOut(), type);
+                cacheResult = service.batchGet(keyList, service.getOptTimeOut(), type);
                 isMulti = true;
             }
         }
-        if (!isMulti && result != null) {
-            return result;
+        if (!isMulti && cacheResult != null) {
+            return cacheResult;
         }
         
         List<Object> notExistList = new ArrayList<Object>();
         List<String> notExistKey = new ArrayList<String>();
         if (isMulti) {
-            if (((Map<?, ?>)result).size() == keyList.size()) {
-                return result;
+            if (cacheResult == null) {
+                cacheResult = new HashMap<String, Object>();
+            }
+            mutilResult = new HashMap<Object, Object>();
+            for (Entry<String, Object> entry : ((HashMap<String, Object>)cacheResult).entrySet()) {
+                mutilResult.put(keyMap.get(entry.getKey()), entry.getValue());
+            }
+            if (((Map<?, ?>)cacheResult).size() == keyList.size()) {
+                return cacheResult;
             } else {
                 for (String key : keyList) {
-                    if (((Map<?, ?>)result).get(key) == null) {
+                    if (((Map<?, ?>)cacheResult).get(key) == null) {
                         notExistList.add(keyMap.get(key));
                         notExistKey.add(key);
                     }
@@ -71,12 +82,19 @@ public class CacheLoaderAdvice extends SingleCacheAdvice<CacheLoader> {
         } else {
             notExistKey.add(keyList.get(0));
         }
-        result = pjp.proceed(pjp.getArgs());
+        Object result = pjp.proceed(pjp.getArgs());
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
             result = new Object();
         }
+        if (!isMulti) {
+            service.set(notExistKey.get(0), result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+            return result;
+        }
+        if (mutilResult != null) {
+            ((Map<Object, Object> ) result).putAll(mutilResult);
+        }
         for (String key : notExistKey) {
-            service.set(key, result, cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+            service.set(key, ((Map<?, ?>)result).get(key), cacheAnnotationData.getTimeout(), service.getOptTimeOut());
         }
         return result;
     }

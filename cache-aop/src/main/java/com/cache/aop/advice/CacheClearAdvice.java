@@ -1,6 +1,5 @@
 package com.cache.aop.advice;
 
-import java.util.List;
 import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import com.cache.aop.advice.common.SingleCacheAdvice;
 import com.cache.aop.annotation.CacheCleaner;
 import com.cache.aop.vo.CacheAnnotationData;
 import com.cache.handler.CacheBasicService;
