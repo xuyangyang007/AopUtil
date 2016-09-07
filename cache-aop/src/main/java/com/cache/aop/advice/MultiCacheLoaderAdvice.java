@@ -35,7 +35,7 @@ public class MultiCacheLoaderAdvice extends MultiCacheAdvice<MultiCacheLoader> {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
         Map<String, Object> keyMap = getCacheKey(cacheAnnotationData, pjp.getArgs());
-        Object cacheResult = null;
+        Map<String, Object> cacheResult = null;
         Map<Object, Object> mutilResult = null;
         List<String> keyList = new ArrayList<>(keyMap.keySet());
         if (cacheAnnotationData.getReturnType() == Map.class) {
@@ -45,15 +45,14 @@ public class MultiCacheLoaderAdvice extends MultiCacheAdvice<MultiCacheLoader> {
         
         List<Object> notExistList = new ArrayList<Object>();
         List<String> notExistKey = new ArrayList<String>();
-        if (cacheResult == null) {
-            cacheResult = new HashMap<String, Object>();
+        if (cacheResult != null) {
+            mutilResult = new HashMap<Object, Object>();
+            for (Entry<String, Object> entry : ((HashMap<String, Object>)cacheResult).entrySet()) {
+                mutilResult.put(keyMap.get(entry.getKey()), entry.getValue());
+            }
         }
-        mutilResult = new HashMap<Object, Object>();
-        for (Entry<String, Object> entry : ((HashMap<String, Object>)cacheResult).entrySet()) {
-            mutilResult.put(keyMap.get(entry.getKey()), entry.getValue());
-        }
-        if (((Map<?, ?>)cacheResult).size() == keyList.size()) {
-            return cacheResult;
+        if (cacheResult != null && ((Map<?, ?>)cacheResult).size() == keyList.size()) {
+            return mutilResult;
         } else {
             for (String key : keyList) {
                 if (((Map<?, ?>)cacheResult).get(key) == null) {
