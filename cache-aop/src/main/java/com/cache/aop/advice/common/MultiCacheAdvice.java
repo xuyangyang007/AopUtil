@@ -8,12 +8,14 @@ import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.cache.aop.advice.CacheAnnotationDataBuilder;
 import com.cache.aop.vo.CacheAnnotationData;
 import com.cache.exception.CacheException;
 import com.cache.handler.CacheBasicService;
 
+@Component
 public abstract class MultiCacheAdvice<T extends Annotation> extends CommonAdvice<CacheAnnotationData> {
     
     

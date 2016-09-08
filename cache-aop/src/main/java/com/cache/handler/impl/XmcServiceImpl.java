@@ -205,6 +205,14 @@ public class XmcServiceImpl implements CacheBasicService {
         }
     }
 
+    public void setOptTimeOut(Long optTimeOut) {
+        this.optTimeOut = optTimeOut;
+    }
+
+    public void setBatchOptTimeOut(Long batchOptTimeOut) {
+        this.batchOptTimeOut = batchOptTimeOut;
+    }
+
     public Long getOptTimeOut() {
         return optTimeOut;
     }

@@ -22,8 +22,8 @@ import com.cache.handler.CacheBasicService;
 @Aspect
 public class MultiCacheLoaderAdvice extends MultiCacheAdvice<MultiCacheLoader> {
 
-    public MultiCacheLoaderAdvice(Class<MultiCacheLoader> annotationClass) {
-        super(annotationClass);
+    public MultiCacheLoaderAdvice() {
+        super(MultiCacheLoader.class);
     }
     
     @Pointcut("@annotation(com.cache.aop.annotation.MultiCacheLoader)")

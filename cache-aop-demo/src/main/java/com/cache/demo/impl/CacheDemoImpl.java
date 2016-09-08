@@ -13,6 +13,7 @@ import com.cache.aop.annotation.CacheNamespace;
 import com.cache.aop.annotation.CacheParam;
 import com.cache.demo.CacheDemo;
 import com.cache.demo.vo.CacheData;
+import com.cache.demo.vo.CacheKey;
 
 /**
  * 
@@ -30,8 +31,12 @@ public class CacheDemoImpl implements CacheDemo {
     }
     
     @CacheLoader(cacheKeyPrefix="detail", timeout=3000)
-    public Object getCacheById(@CacheParam Long id) {
-        return new Object();
+    public CacheData getCacheById(@CacheParam CacheKey id) {
+        System.out.println(id.toString());
+        CacheData data = new CacheData();
+        data.setId(id.getId());
+        data.setDescription(id.getDesc());
+        return data;
     }
     
     @CacheLoader(cacheKeyPrefix="detail", timeout=3000)
