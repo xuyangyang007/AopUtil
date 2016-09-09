@@ -51,16 +51,21 @@ public class MultiCacheLoaderAdvice extends MultiCacheAdvice<MultiCacheLoader> {
                 mutilResult.put(keyMap.get(entry.getKey()), entry.getValue());
             }
         }
-        if (cacheResult != null && ((Map<?, ?>)cacheResult).size() == keyList.size()) {
-            return mutilResult;
-        } else {
-            for (String key : keyList) {
-                if (((Map<?, ?>)cacheResult).get(key) == null) {
-                    notExistList.add(keyMap.get(key));
-                    notExistKey.add(key);
+        if (cacheResult != null) {
+            if (((Map<?, ?>)cacheResult).size() == keyList.size()){
+                return mutilResult;
+            } else {
+                for (String key : keyList) {
+                    if (((Map<?, ?>)cacheResult).get(key) == null) {
+                        notExistList.add(keyMap.get(key));
+                        notExistKey.add(key);
+                    }
                 }
+                pjp.getArgs()[cacheAnnotationData.getCacheParamIndexList().get(0)] = notExistList;
             }
-            pjp.getArgs()[cacheAnnotationData.getCacheParamIndexList().get(0)] = notExistList;
+        } else {
+            notExistList.addAll(keyMap.values());
+            notExistKey.addAll(keyList);
         }
         Object result = pjp.proceed(pjp.getArgs());
         if (result == null && !cacheAnnotationData.isAllowNullValue()) {
@@ -70,7 +75,8 @@ public class MultiCacheLoaderAdvice extends MultiCacheAdvice<MultiCacheLoader> {
             ((Map<Object, Object> ) result).putAll(mutilResult);
         }
         for (String key : notExistKey) {
-            service.set(key, ((Map<?, ?>)result).get(key), cacheAnnotationData.getTimeout(), service.getOptTimeOut());
+            Object orignKey = keyMap.get(key);
+            service.set(key, ((Map<?, ?>)result).get(orignKey), cacheAnnotationData.getTimeout(), service.getOptTimeOut());
         }
         return result;
     }

@@ -17,6 +17,6 @@ public interface CacheDemo {
     
     public List<CacheData> getCacheData(Integer id);
     
-    public Map<Integer, CacheData> batchGetData(List<Integer> idList);
+    public Map<CacheKey, CacheData> batchGetData(List<CacheKey> idList);
 
 }

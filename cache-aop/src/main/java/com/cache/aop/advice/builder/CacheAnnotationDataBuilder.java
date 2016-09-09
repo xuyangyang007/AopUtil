@@ -1,4 +1,4 @@
-package com.cache.aop.advice;
+package com.cache.aop.advice.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cache.aop.annotation.CacheLoader;
 import com.cache.aop.annotation.CacheNamespace;
 import com.cache.aop.annotation.CacheParam;
 import com.cache.aop.vo.CacheAnnotationData;
@@ -18,9 +17,9 @@ import com.cache.aop.vo.CacheAnnotationData;
  * @author yangyang.xu
  *
  */
-public class CacheAnnotationDataBuilder {
+public abstract class CacheAnnotationDataBuilder {
     
-    public static CacheAnnotationData buildAnnotationData(final Annotation annotation,
+    public CacheAnnotationData buildAnnotationData(final Annotation annotation,
             final Class<? extends Annotation> expectedAnnotationClass, final Method targetMethod, final Class<?> tagetClass) {
         final CacheAnnotationData data = new CacheAnnotationData();
 
@@ -42,7 +41,7 @@ public class CacheAnnotationDataBuilder {
         return data;
     }
     
-    private static void populateCacheArgs(CacheAnnotationData data, Method targetMethod) {
+    private void populateCacheArgs(CacheAnnotationData data, Method targetMethod) {
         Annotation[][] paramAnotations = targetMethod.getParameterAnnotations();
         if (paramAnotations == null) {
             return ;
@@ -58,7 +57,7 @@ public class CacheAnnotationDataBuilder {
         data.setCacheParamIndexList(list);
     }
     
-    public static void setCacheArgs(Object param, Method targetMethod) {
+    public void setCacheArgs(Object param, Method targetMethod) {
         Annotation[][] paramAnotations = targetMethod.getParameterAnnotations();
         if (paramAnotations == null) {
             return ;
@@ -73,7 +72,7 @@ public class CacheAnnotationDataBuilder {
         }
     }
 
-    private static void populateClassCacheName(CacheAnnotationData data, Class<?> tagetClass) {
+    private void populateClassCacheName(CacheAnnotationData data, Class<?> tagetClass) {
         CacheNamespace cacheKeyConfig = (CacheNamespace) tagetClass.getAnnotation(CacheNamespace.class);
         if (cacheKeyConfig == null) {
             return;
@@ -81,17 +80,6 @@ public class CacheAnnotationDataBuilder {
         data.setCacheNameSpace(cacheKeyConfig.nameSpace());
     }
 
-    static void populateCacheName(final CacheAnnotationData data, final Method targetMethod) {
-        CacheLoader cache = targetMethod.getAnnotation(CacheLoader.class);
-        if (cache == null) {
-            return;
-        }
-
-        data.setCacheKeyPrefix(cache.cacheKeyPrefix());
-        data.setCacheKeySuffix(cache.cacheKeySuffix());
-        data.setCacheNode(cache.cacheNode());
-        data.setReload(cache.isReload());
-        data.setTimeout(cache.timeout());
-    }
+    protected abstract void populateCacheName(final CacheAnnotationData data, final Method targetMethod);
 
 }

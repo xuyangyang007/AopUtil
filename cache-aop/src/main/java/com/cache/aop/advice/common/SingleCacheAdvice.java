@@ -9,7 +9,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cache.aop.advice.CacheAnnotationDataBuilder;
+import com.cache.aop.advice.builder.CacheAnnotationDataBuilder;
+import com.cache.aop.advice.builder.SingleAnnotationBuilder;
 import com.cache.aop.vo.CacheAnnotationData;
 import com.cache.handler.CacheBasicService;
 
@@ -26,6 +27,9 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
     
     @Autowired
     private CacheBasicService xmcServiceImpl;
+    
+    @Autowired
+    private SingleAnnotationBuilder singleAnnotationBuilder;
 
     public SingleCacheAdvice(final Class<T> annotationClass) {
         this.annotationClass = annotationClass;
@@ -41,7 +45,7 @@ public abstract class SingleCacheAdvice <T extends Annotation> extends CommonAdv
             if (annotation == null) {
                 return null;
             }
-            data = CacheAnnotationDataBuilder.buildAnnotationData(annotation, annotationClass, methodToCache, pjp.getTarget().getClass());
+            data = singleAnnotationBuilder.buildAnnotationData(annotation, annotationClass, methodToCache, pjp.getTarget().getClass());
 
         } catch (Throwable ex) {
             getLogger()

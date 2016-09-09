@@ -11,6 +11,7 @@ import com.cache.aop.annotation.CacheCleaner;
 import com.cache.aop.annotation.CacheLoader;
 import com.cache.aop.annotation.CacheNamespace;
 import com.cache.aop.annotation.CacheParam;
+import com.cache.aop.annotation.MultiCacheLoader;
 import com.cache.demo.CacheDemo;
 import com.cache.demo.vo.CacheData;
 import com.cache.demo.vo.CacheKey;
@@ -60,17 +61,17 @@ public class CacheDemoImpl implements CacheDemo {
     }
 
     @Override
-    @CacheLoader(cacheKeyPrefix="batchGetData", timeout=3000)
-    public Map<Integer, CacheData> batchGetData(@CacheParam List<Integer> idList) {
-        Map<Integer, CacheData> map = new HashMap<Integer, CacheData>();
-        for (Integer id : idList) {
+    @MultiCacheLoader(cacheKeyPrefix="batchGetData", timeout=3000)
+    public Map<CacheKey, CacheData> batchGetData(@CacheParam List<CacheKey> idList) {
+        Map<CacheKey, CacheData> map = new HashMap<CacheKey, CacheData>();
+        for (CacheKey id : idList) {
             CacheData data1 = new CacheData();
             data1.setDescription(id + "desc");
-            data1.setId(id);
+            data1.setId(id.getId());
             data1.setName("name" + id);
             map.put(id, data1);
         }
-        return null;
+        return map;
     }
 
 }
