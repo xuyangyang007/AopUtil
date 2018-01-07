@@ -21,7 +21,7 @@ public class CacheAnnotationData {
     
     private boolean allowNullValue;
     
-    private String cacheNode;
+    private String cacheNode = "mc";
     
     private boolean isReload;
     

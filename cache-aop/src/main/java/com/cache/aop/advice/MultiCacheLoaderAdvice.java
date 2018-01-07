@@ -30,7 +30,8 @@ public class MultiCacheLoaderAdvice extends MultiCacheAdvice<MultiCacheLoader> {
     public void loadCache() {
     }
 
-    @Around("loadCache()")
+    @SuppressWarnings("unchecked")
+	@Around("loadCache()")
     public Object cacheGetMulti(final ProceedingJoinPoint pjp) throws Throwable {
         CacheAnnotationData cacheAnnotationData = getAnnotationData(pjp); 
         CacheBasicService service = getCacheBaseService(cacheAnnotationData);
