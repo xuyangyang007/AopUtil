@@ -4,20 +4,20 @@
 
 * @CacheCleaner 缓存清除（函数级别）
 
->>参数：
-* cacheKeyPrefix 缓存前缀
+>>参数：<br/>
+cacheKeyPrefix 缓存前缀
 
 * @CacheLoader 缓存加载（函数级别）
 
->>参数：
-* cacheKeyPrefix 缓存前缀
-* timeout 缓存超时时间
+>>参数：<br/>
+cacheKeyPrefix 缓存前缀<br/>
+timeout 缓存超时时间
 
 * @MultiCacheLoader 批量缓存加载（函数级别）
 
 >>参数：
-* cacheKeyPrefix 缓存前缀
-* timeout 缓存超时时间
+cacheKeyPrefix 缓存前缀<br/>
+timeout 缓存超时时间
 
 * @CacheParam 缓存key的组成（函数参数级别）
 * @CacheNamespace 缓存key的组成(类级别)
