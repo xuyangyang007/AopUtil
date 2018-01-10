@@ -24,17 +24,17 @@
 
 *说明：缓存key组成：nameSpace + cacheKeyPrefix + CacheParam*
 
-	@CacheNamespace(nameSpace="cache-demo")
+	@CacheNamespace(nameSpace="cache-demo") // 缓存类前缀，可以为空
 	@Service
 	public class CacheDemoImpl {
     
-	    @CacheCleaner(cacheKeyPrefix="detail")
+	    @CacheCleaner(cacheKeyPrefix="detail") // 进入方法前清除缓存
 	    public void deleteCacheById(@CacheParam Long id) {
 	        
 	    }
 	    
-	    @CacheLoader(cacheKeyPrefix="detail", timeout=3000)
-	    public CacheData getCacheById(@CacheParam CacheKey id) {
+	    @CacheLoader(cacheKeyPrefix="detail", timeout=3000) // 加载缓存
+	    public CacheData getCacheById(@CacheParam CacheKey id) { // CacheParam表示注解缓存后缀
 	        System.out.println(id.toString());
 	        CacheData data = new CacheData();
 	        data.setId(id.getId());
@@ -42,13 +42,13 @@
 	        return data;
 	    }
 	    
-	    @CacheLoader(cacheKeyPrefix="detail", timeout=3000)
-	    public Object updateCache(@CacheParam Long id) {
+	    @CacheLoader(cacheKeyPrefix="detail", timeout=3000) // 加载缓存
+	    public Object updateCache(@CacheParam Long id) { // CacheParam表示注解缓存后缀
 	        return new Object();
 	    }
 	
-	    @CacheLoader(cacheKeyPrefix="detailList", timeout=3000)
-	    public List<CacheData> getCacheData(@CacheParam Integer id) {
+	    @CacheLoader(cacheKeyPrefix="detailList", timeout=3000) // 获取缓存
+	    public List<CacheData> getCacheData(@CacheParam Integer id) { 
 	        CacheData data1 = new CacheData();
 	        data1.setDescription("11");
 	        data1.setId(1);
@@ -61,7 +61,7 @@
 	        return list;
 	    }
 	
-	    @MultiCacheLoader(cacheKeyPrefix="batchGetData", timeout=3000)
+	    @MultiCacheLoader(cacheKeyPrefix="batchGetData", timeout=3000) // 批量获取缓存
 	    public Map<CacheKey, CacheData> batchGetData(@CacheParam List<CacheKey> idList) {
 	        Map<CacheKey, CacheData> map = new HashMap<CacheKey, CacheData>();
 	        for (CacheKey id : idList) {
